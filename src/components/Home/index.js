@@ -3,10 +3,9 @@
 import React, {Component} from 'react'
 import './index.css'
 import {HiOutlineSearch} from 'react-icons/hi'
-import Cookies from 'js-cookie'
+import Loader from 'react-loader-spinner'
 import Header from '../Header'
 import ProfilePage from '../ProfilePage'
-import LoadingView from '../LoadingView'
 import UserContext from '../../context/UserContext'
 
 const apiStatusConstants = {
@@ -30,20 +29,62 @@ class Home extends Component {
     this.getGitHubbersDetails()
   }
 
-  onSuccessAuthentication = data => {
-    this.setState({apiStatus: apiStatusConstants.success, isInvalid: false})
-    const {changeUsername, addProfileDetails} = this.context
-    changeUsername(data.login)
-    addProfileDetails(data)
-    Cookies.set('auth_token', data.id)
+  getGitHubbersDetails = async () => {
+    const {username} = this.context
+    this.setState({apiStatus: apiStatusConstants.inProgress})
+    const profileDetailsApiUrl = `https://apis2.ccbp.in/gpv/profile-details/${username}?api_key=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`
+    const options = {
+      method: 'GET',
+    }
+    const response = await fetch(profileDetailsApiUrl, options)
+    if (response.ok === true) {
+      const data = await response.json()
+      const updatedData = {
+        avatarUrl: data.avatar_url,
+        bio: data.bio,
+        blog: data.blog,
+        company: data.company,
+        createdAt: data.created_at,
+        email: data.email,
+        eventsUrl: data.events_url,
+        followers: data.followers,
+        followersUrl: data.followers_url,
+        following: data.following,
+        followingUrl: data.following_url,
+        gistsUrl: data.gists_url,
+        gravatarId: data.gravatar_id,
+        hireable: data.hireable,
+        htmlUrl: data.html_url,
+        id: data.id,
+        location: data.location,
+        login: data.login,
+        name: data.name,
+        nodeId: data.node_id,
+        organizationsUrl: data.organizations_url,
+        publicGists: data.public_gists,
+        publicRepos: data.public_repos,
+        receivedEventsUrl: data.received_events_url,
+        reposUrl: data.repos_url,
+        siteAdmin: data.site_admin,
+        starredUrl: data.starred_url,
+        subscriptionsUrl: data.subscriptions_url,
+        twitterUsername: data.twitter_username,
+        type: data.type,
+        updatedAt: data.updated_at,
+        url: data.url,
+      }
+      this.setState(prevState => ({
+        profileDetails: [...prevState.profileDetails, updatedData],
+        apiStatus: apiStatusConstants.success,
+      }))
+    } else {
+      this.setState({apiStatus: apiStatusConstants.failure})
+    }
   }
 
   tryAgain = () => {
-    this.onSubmitSearch({preventDefault: () => {}})
-  }
-
-  onFailureAuthentication = () => {
-    this.setState({apiStatus: apiStatusConstants.failure, isInvalid: true})
+    this.setState({isInvalid: false, errorMsg: ''})
+    this.getGitHubbersDetails()
   }
 
   renderFailureView = () => (
@@ -55,52 +96,42 @@ class Home extends Component {
         alt="something went wrong"
       />
       <h1 className="failure-text">Something went wrong. Please try again</h1>
-      <button className="try-again-button" onClick={this.tryAgain}>
+      <button
+        className="try-again-button"
+        type="button"
+        onClick={this.tryAgain}
+      >
         Try Again
       </button>
     </div>
   )
 
-  renderLoadingView = () => <LoadingView />
+  renderLoadingView = () => (
+    <div className="loader-container" data-testid="loader">
+      <Loader type="TailSpin" color="#3B82F6" height={50} width={50} />
+    </div>
+  )
 
-  onSubmitSearch = async event => {
-    event.preventDefault()
+  onSearch = () => {
     const {username} = this.context
 
     if (!username.trim()) {
-      this.setState({isInvalid: true})
-      return
-    }
-
-    this.setState({apiStatus: apiStatusConstants.inProgress})
-    try {
-      const url = `https://apis2.ccbp.in/gpv/profile-details/kentcdodds?api_key=`
-      const response = await fetch(url)
-      if (response.ok) {
-        const userData = await response.json()
-        this.onSuccessAuthentication(userData)
-      } else {
-        this.onFailureAuthentication()
-      }
-    } catch (error) {
-      this.onFailureAuthentication()
+      this.setState({
+        isInvalid: true,
+        errorMsg: 'Enter the valid github username',
+        profileDetails: [],
+      })
+    } else {
+      this.getGitHubbersDetails()
+      this.setState({isInvalid: false, errorMsg: ''})
     }
   }
 
-  renderProfileView = () => <ProfilePage />
-
-  renderLandingView = () => (
-    <>
-      <h1 className="home-page-heading">GitHub Profile Visualizer</h1>
-      <img
-        className="home-page-image"
-        src="https://res.cloudinary.com/dfxtnqgcz/image/upload/v1721058054/Group_2_1x_y0vqqa.png"
-        alt="gitHub profile visualizer home page"
-      />
-    </>
+  renderProfileView = () => (
+    <ProfilePage userProfileDetails={this.state.profileDetails} />
   )
 
-  renderHomePage = () => {
+  renderLandingPage = () => {
     const {apiStatus} = this.state
 
     switch (apiStatus) {
@@ -111,23 +142,20 @@ class Home extends Component {
       case apiStatusConstants.inProgress:
         return this.renderLoadingView()
       default:
-        return this.renderLandingView()
+        return null
     }
   }
 
   render() {
     const {username, changeUsername} = this.context
-    const {isInvalid} = this.state
+    const {isInvalid, profileDetails} = this.state
 
     return (
       <div className="home-page-container">
         <Header />
         <div className="centered-content">
           <div className="search-container">
-            <form
-              className="text-input-container"
-              onSubmit={this.onSubmitSearch}
-            >
+            <div className="text-input-container">
               <input
                 type="search"
                 className="text-input"
@@ -138,17 +166,31 @@ class Home extends Component {
               />
               <button
                 data-testid="searchButton"
+                type="button"
                 className="search-icon-button"
-                type="submit"
+                onClick={this.onSearch}
               >
                 <HiOutlineSearch />
               </button>
-            </form>
+            </div>
             {isInvalid && (
               <p className="error-message">Enter a valid GitHub username</p>
             )}
           </div>
-          {this.renderHomePage()}
+          <div>
+            {profileDetails.length === 0 ? (
+              <>
+                <h1 className="home-page-heading">GitHub Profile Visualizer</h1>
+                <img
+                  className="home-page-image"
+                  src="https://res.cloudinary.com/dfxtnqgcz/image/upload/v1721058054/Group_2_1x_y0vqqa.png"
+                  alt="gitHub profile visualizer home page"
+                />
+              </>
+            ) : (
+              this.renderLandingPage()
+            )}
+          </div>
         </div>
       </div>
     )
