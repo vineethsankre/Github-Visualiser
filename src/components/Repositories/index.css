@@ -1,0 +1,47 @@
+.home-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #0f172a;
+  padding: 10px;
+}
+
+.failure-view-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.failure-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.nodata-image {
+  width: 296px;
+  margin-top: 40px;
+}
+@media screen and (min-width: 1024px) {
+  .nodata-image {
+    width: 560px;
+  }
+}
+
+.failure-text {
+  font-size: 20px;
+  color: #ffffff;
+  text-align: center;
+  margin-top: 48px;
+  line-height: 32px;
+  font-weight: 600;
+}
+@media screen and (min-width: 1024px) {
+  .failure-text {
+    font-size: 32px;
+    line-height: 48px;
+    font-weight: 600;
+  }
+}
