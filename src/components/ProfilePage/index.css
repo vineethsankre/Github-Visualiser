@@ -106,13 +106,14 @@
 .login-name {
   color: #f8fafc;
   font-family: 'Roboto';
-  font-size: 20px;
+  font-size: 18px;
   margin-top: 0px;
+  margin-bottom: 0px;
 }
 .bio {
   color: #f8fafc;
   font-family: 'Roboto';
-  font-size: 14px;
+  font-size: 12px;
   line-height: 24px;
   text-align: center;
 }
@@ -150,7 +151,7 @@
     line-height: 24px;
   }
 }
-.stat-container{
+.stat-container {
   display: flex;
   align-items: center;
 }
@@ -186,4 +187,11 @@
   font-size: 12px;
   line-height: 16px;
   font-weight: 700;
+}
+
+.icon-style {
+  color: #f8fafc;
+  font-size: 20px;
+  font-weight: bold;
+  margin-right: 8px;
 }

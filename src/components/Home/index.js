@@ -32,7 +32,7 @@ class Home extends Component {
   getGitHubbersDetails = async () => {
     const {username} = this.context
     this.setState({apiStatus: apiStatusConstants.inProgress})
-    const profileDetailsApiUrl = `https://apis2.ccbp.in/gpv/profile-details/${username}?api_key=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`
+    const profileDetailsApiUrl = `https://apis2.ccbp.in/gpv/profile-details/${username}`
     const options = {
       method: 'GET',
     }
@@ -159,6 +159,7 @@ class Home extends Component {
               <input
                 type="search"
                 className="text-input"
+                id="search-input"
                 value={username}
                 placeholder="Enter GitHub username"
                 onChange={e => changeUsername(e.target.value)}

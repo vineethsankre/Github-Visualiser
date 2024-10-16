@@ -14,7 +14,7 @@ const Header = () => {
   return (
     <>
       <nav className="nav-header">
-        <Link to="/">
+        <Link to="/" className="nav-link">
           <p className="header-heading">Github Profile Visualizer</p>
         </Link>
         <button className="menu-button" type="button" onClick={toggleMenu}>
@@ -25,25 +25,25 @@ const Header = () => {
           )}
         </button>
         <ul className="nav-container">
-          <Link to="/">
+          <Link to="/" className="nav-link">
             <li className="nav-item">Home</li>
           </Link>
-          <Link to="/repositories">
+          <Link to="/repositories" className="nav-link">
             <li className="nav-item">Repositories</li>
           </Link>
-          <Link to="/analysis">
+          <Link to="/analysis" className="nav-link">
             <li className="nav-item">Analysis</li>
           </Link>
         </ul>
         {isMenuOpen && (
           <ul className="mobile-nav-container">
-            <Link to="/">
+            <Link to="/" className="nav-link">
               <li className="mobile-nav-item">Home</li>
             </Link>
-            <Link to="/">
+            <Link to="/" className="nav-link">
               <li className="mobile-nav-item">Repositories</li>
             </Link>
-            <Link to="/">
+            <Link to="/" className="nav-link">
               <li className="mobile-nav-item">Analysis</li>
             </Link>
           </ul>
