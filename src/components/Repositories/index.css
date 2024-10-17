@@ -1,4 +1,4 @@
-.home-page-container {
+.repositories-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -44,4 +44,37 @@
     line-height: 48px;
     font-weight: 600;
   }
+}
+.nodata-found-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.nodata-img {
+  height: 250px;
+  width: 250px;
+}
+.nodata-heading {
+  color: #f8fafc;
+  font-family: 'Roboto';
+  font-size: 20px;
+  line-height: 32px;
+  font-weight: 500;
+}
+
+.nodata-desc {
+  color: #f8fafc;
+  font-family: 'Roboto';
+  font-size: 12px;
+  text-align: center;
+}
+.goto-home-btn {
+  background-color: #f8fafc;
+  font-family: 'Roboto';
+  font-size: 16px;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  outline: none;
 }
